@@ -1,0 +1,233 @@
+
+# Assignment 2
+
+<font color = 'blue' size=5> Problem Statement 1 :-Samantha has created a dataset named 'top50spotify.csv' of her top 50 
+songs from spotify.Following Tasks to be performed:</font>
+
+<font color = 'red' size=3># 1. Import the dataset as a DataFrame and drop the first column.</font>
+
+import pandas as pd
+
+# Import the dataset
+df = pd.read_csv("top50spotify.csv")
+df
+
+# Drop the first coln
+
+df.pop(df.columns[0])
+df
+
+<font color = 'red' size=3>2. Save it as 'top50.csv </font>
+
+import os
+os.rename("top50spotify.csv","top50.csv")
+
+df = pd.read_csv("top50.csv")
+df
+
+<font color ='red' size=3>3. Find the average Energy and Length of first 10 songs</font>
+
+# Method 1
+
+df_avg_Energy = df["Energy"].head(10)
+df_avg_Length = df["Length."].head(10)
+
+print("Average Energy : ",df_avg_Energy.mean())
+print("Average Length : ",df_avg_Length.mean())
+
+# Method 2
+print("Average Energy : ",df["Energy"].iloc[:10].mean())
+print("Average Length : ",df["Length."].iloc[:10].mean())
+
+<font color = 'red' size=3>4. Find the total length of songs, group by genre from top to bottom.</font>
+
+Total_length = df[["Genre","Length."]].groupby("Genre").sum()
+print(Total_length)
+print()
+
+print("Total length of all songs",Total_length.sum())
+
+<font color = 'red' size=3>5. Print the artist name with the most number of tracks in one genre. (Hint: Group by artist 
+name and genre)</font>
+
+df1 = df.loc[:,["Genre","Artist.Name"]]
+df1.head()
+
+Most_Tracks = df1.groupby("Artist.Name")["Genre"].count()
+Most_Tracks.head()
+
+# # The artist name with the most number of tracks in one genre
+print("The artist name with the most number of tracks in one genre : ",Most_Tracks.idxmax())
+print("Number of tracks of the artist : ",Most_Tracks.max())
+
+<font color = 'red' size=3>6.Print the data of the tracks created by the artist from the previous question.</font>
+
+# make a group by on Artist Name
+
+df.groupby("Artist.Name").groups
+
+# print All the details of Artist which have most no. of Tracks(Name,Total Tracks,Genre,All tracks in details)
+
+print("The Artist Name ==>                 ",Most_Tracks.idxmax())
+print("Number of tracks of the artist ==>  ",Most_Tracks.max())
+print("Genre of the Artist ==>             ",df["Genre"].iloc[3])
+print()
+print("Track Names of  : ")
+print()
+print(df["Track.Name"].loc[[3,5,37,49]])
+
+
+<font color = "blue" size = 5>Problem Statement 2 :-Write a Python program to perform the following tasks </font>
+
+
+<font color = "red" size = 3>1.Create a pandas series from the below dictionary where indices are subjects:</font>
+
+data = {
+    'English':   {'Sam':60,
+                  'Jackson':74,
+                  'Ahree':85},
+    'History':    {'Gloria':83,
+                   'Sam':65, 
+                   'Isla':78,
+                   'Aron':72,
+                   'Gray':61},
+    'Geography':  {'Jackson':92, 
+                   'Gloria':95, 
+                   'Isla':82, 
+                   'Aron':75, 
+                   'Ahree':76},
+    'Mathematics':{'Sam':99,
+                   'Gloria':74, 
+                   'Jackson':89, 
+                   'Ahree':85,
+                   'Gray':95},
+    'Science':    {'Sam':89, 
+                   'Aron':82,
+                   'Gray':78, 
+                   'Isla':93, 
+                   'Ahree':87}
+       }
+# Coverted dict into Series 
+
+S1 = pd.Series(data)
+print("Series  :- ")
+print()
+print(S1)
+print()
+
+# Indexes
+print("Index of Series ")
+print("Index are : ",S1.index)
+
+<font color = "red" size = 3>2.Convert the created series into DataFrame and replace the null values with zeroes.</font>
+
+df=S1.apply(pd.Series)
+df
+
+df.fillna(0)
+
+<font color = "red" size = 3>3.Transpose the DataFrame and create a new column 'Average' and fill the values in it by 
+calculating the average of all subjects.</font>
+
+df_T = df.transpose()
+df_T
+
+# Create new col and take average
+
+df_T["Average"]=round(df_T.mean(axis=1),1)
+df_T
+
+<font color = "blue" size = 5>Problem Statement 3: Write a Python program to create a series from 1 to 1000 and select 
+only numbers divisible by 7 and 17.</font>
+
+import numpy as np
+data = np.arange(1,1000)
+S = pd.Series(data)
+print("From (1-1000) following are the numbers divisible by 7 and 17 :-")
+for i in S:
+    if i%7==0 and i%17==0:
+        print(i)
+
+
+<font color = "blue" size = 5>Problem Statement 4: Sylphia has a dataset of various cereals sold in the supermarket.</font>
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+<font color = "red" size = 3>1. Import the dataset.</font>
+
+df = pd.read_csv("cereal.csv")
+df
+
+<font color = "red" size = 3>2.Plot ratings of different types of manufacturers.</font>
+
+plt.figure(figsize=(22,4))
+x = df['rating']
+y = df['mfr']
+plt.bar(x,y,color='hotpink',align='edge', edgecolor='r', linewidth=3)
+plt.title("Ratings of Manufacturer",fontweight='bold',fontsize=20)
+plt.ylabel("Manufcurer's Name", fontsize=10)
+plt.xlabel("Ratings", fontsize=10)
+plt.grid(axis='y')
+plt.show()
+
+<font color = "red" size = 3>4.Use xticks range form 0-100.</font>
+
+# to change range of xticks
+plt.figure(figsize=(10,4))
+y = df["rating"]
+x= df["mfr"]
+plt.barh(x,y,color='brown',align='edge', edgecolor='y', linewidth=1.5)
+plt.title("Ratings of Manufacturer",fontweight='bold',fontsize=20)
+plt.xticks(np.arange(0,101,10),rotation=15)
+plt.grid(axis='x')
+plt.show()
+
+<font color = "red" size = 3>5.Change the style of the graph to seaborn</font>
+
+sns.set_style("dark")
+sns.set(rc={'figure.figsize':(10,5)})
+sns.barplot(data=df,y="mfr", x="rating",label=["A","P","G","R","K","Q","N"],linestyle=':',edgecolor='r')
+plt.ylabel("Manufcurer's Name", fontsize=10)
+plt.xlabel("Ratings", fontsize=10)
+plt.xticks(np.arange(0,101,10))
+plt.title("Highest Ratings of Manufacturer", fontsize=20, color='r',fontweight='bold')
+plt.legend()
+plt.show()
+
+# <font color='green' size=4>* Additional visualization to present data in detail</font>
+
+# plot rating using seaborn in different styple
+plt.style.use('seaborn-v0_8-poster')
+sns.set(rc={'figure.figsize':(8,4)})
+sns.lineplot(df,x="mfr", y="rating", color='g',marker='o',label="Ratings")
+plt.xlabel("Manufcurer's Name", fontsize=15)
+plt.ylabel("Ratings", fontsize=15)
+plt.title("Ratings of Manufacturer(Line Plot Using Seaborn)", fontsize=20, color='blue', fontweight='bold')
+plt.legend(bbox_to_anchor=(1.3,1))
+plt.grid(True,linestyle=":",color="k",linewidth=0.8)
+plt.show()
+
+plt.figure(figsize=(10,6))
+for group,data in df.groupby('mfr'):
+    plt.barh(group,data['rating'].mean())
+plt.xticks(np.arange(0,100,10))
+plt.title("Ratings Of Manufacturer(HBar Plot Using Seaborn)", fontsize=20, color='blue',fontweight='bold')
+plt.xlabel("Manufcurer's Name", fontsize=15, fontstyle='italic')
+plt.ylabel("Ratings", fontsize=15, fontstyle='italic')
+plt.legend(df["mfr"])
+plt.show()
+
+# Average of every manufacture using groupby
+a = round(df.groupby("mfr")['rating'].mean(),1)
+a
+
+# Highest rating in percentage using piechart
+plt.figure(figsize=(6,6))
+y = a
+mylabels=["A","G","K","N","P","Q","R"]
+plt.pie(y,labels=mylabels,labeldistance=1.1,radius=1,autopct="%0.2f%%")
+plt.legend(loc="upper right",title="Rating in %",bbox_to_anchor=(1.3,1))
+plt.title("Pie Chart[Highest Rating In Percentage]",color='blue',fontsize=20,fontweight='bold')
+plt.show()
